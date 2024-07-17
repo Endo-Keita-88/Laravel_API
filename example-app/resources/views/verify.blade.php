@@ -9,9 +9,7 @@
 <body>
     <div class="container">
         <h1>メール認証</h1>
-
         <h2>{{ $member->email }}に送信されたコードを入力してください</h2>
-        <h2>{{ $member->token }}</h2>
 
         <form method="POST" action="{{ route('tokenCheck') }}">
             @csrf

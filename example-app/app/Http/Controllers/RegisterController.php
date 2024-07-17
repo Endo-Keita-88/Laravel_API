@@ -6,6 +6,8 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 
 class RegisterController extends Controller
@@ -69,7 +71,9 @@ class RegisterController extends Controller
         }
 
         // 認証に失敗した場合
-        return back()->withErrors(['token' => '認証コードが正しくありません。'])->withInput();
+        // return back()->withErrors(['token' => '認証コードが正しくありません。'])->withInput();
+        return view('verify')->with(['member' => $member]);
+
     }
 
     /**
@@ -80,15 +84,20 @@ class RegisterController extends Controller
     public function registerCreate(Request $request)
     {
         // バリデーション
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'password' => 'required|string|confirmed',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'password' => 'required|string|confirmed',
+            ],
+            [
+                'password.confirmed' => 'パスワードと確認用パスワードが一致しません。',
+            ]
+        );
 
         // 新しいユーザーを作成
         $member = Member::latest()->first();
         $member->name = $request->name;
-        $member->password = $request->password;
+        $member->password = Hash::make($request->password);
         $member->save();
 
         // ユーザー登録後の処理
