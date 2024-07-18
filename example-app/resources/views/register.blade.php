@@ -9,13 +9,13 @@
 <body>
     <div class="container">
         <h1>会員登録</h1>
-        <form method="POST" action="{{ url('/register') }}">
+        <form method="POST" action="{{ route('registerCreate') }}">
             @csrf
             <div class="reg_value">
-                <input type="text" id="name" name="name" required placeholder="名前を入力してください">
+                {{ $member->email }}<br>
             </div>
             <div class="reg_value">
-                <input type="email" id="email" name="email" required placeholder="メールアドレスを入力してください">
+                <input type="text" id="name" name="name" required placeholder="名前を入力してください">
             </div>
             <div class="reg_value">
                 <input type="password" id="password" name="password" required placeholder="パスワードを入力してください">

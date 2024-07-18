@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify</title>
+    <title>resetTokenCheck</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
         <h1>メール認証</h1>
-
+        @isset($member)
         <h2>{{ $member->email }}に送信されたコードを入力してください</h2>
         <h2>{{ $member->token }}</h2>
+        @else
 
-        <form method="POST" action="{{ route('tokenCheck') }}">
+        @endisset
+        <form method="POST" action="{{ route('resetTokenCheck') }}">
             @csrf
+            <div class="reg_value">
+                <input type="hidden" name="email" value="{{ $member->email }}">
+            </div>
             <div class="reg_value">
                 <input type="text" id="token" name="token" required placeholder="コードを入力してください">
             </div>
