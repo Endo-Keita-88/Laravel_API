@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>会員登録</h1>
-        <form method="GET" action="{{ route('registerCreate') }}">
+        <form method="POST" action="{{ route('registerCreate') }}">
             @csrf
             <div class="reg_value">
                 {{ $member->email }}<br>
@@ -20,9 +20,6 @@
             <div class="reg_value">
                 <input type="password" id="password" name="password" required placeholder="パスワードを入力してください">
             </div>
-            @error('password')
-                {{ $message }}</div>
-            @enderror
             <div class="reg_value">
                 <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="パスワードをもう一度入力してください">
             </div>

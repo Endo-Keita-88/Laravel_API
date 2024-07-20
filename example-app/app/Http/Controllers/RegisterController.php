@@ -24,28 +24,18 @@ class RegisterController extends Controller
         $request->validate([
             'email' => 'required|email|unique:members,email',
         ]);
+        $token = rand(1000, 9999);
 
         // 新しいユーザーを作成する
         $member = new Member();
         $member->email = $request->email;
         $member->name = '';
         $member->password = '';
-        $member->token = '';
+        $member->token = $token;
         // ユーザーの保存
         $saved = $member->save();
 
-        if ($saved) {
-            // 成功した場合
-            $token = rand(1000, 9999);
-            $member->token = $token;
-            $member->save();
-
-            return view('verify')->with(['member' => $member]);
-
-        } else {
-            // 失敗した場合
-            return back()->withErrors(['email' => 'アドレスが正しくないまたはすでに使用されています。'])->withInput();
-        }
+        return view('verify')->with(['member' => $member]);
     }
 
     /**
@@ -102,6 +92,20 @@ class RegisterController extends Controller
 
         // ユーザー登録後の処理
         return view('registerCheck')->with(['member' => $member]);
+    }
+
+    /**
+     * 会員登録処理を途中でやめた場合
+     * @param
+     * @return view
+     */
+    public function delete()
+    {
+        // 新しいユーザーを削除
+        $member = Member::latest()->first();
+        $member->delete();
+        //ひとつ前の画面に遷移する
+        return view('send');
     }
 }
 

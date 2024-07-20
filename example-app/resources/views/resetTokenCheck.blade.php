@@ -14,7 +14,7 @@
         @else
 
         @endisset
-        <form method="POST" action="{{ route('resetTokenCheck') }}">
+        <form method="GET" action="{{ route('resetTokenCheck') }}">
             @csrf
             <div class="reg_value">
                 <input type="hidden" name="email" value="{{ $member->email }}">

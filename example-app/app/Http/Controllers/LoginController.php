@@ -29,7 +29,6 @@ class LoginController extends Controller
      */
     public function show(Request $request, Member $member)
     {
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -90,7 +89,7 @@ class LoginController extends Controller
 
         // 認証コードが一致するか確認
         if ($member->token === $token) {
-        return view('resetPassword')->with(['member' => $member]);
+            return view('resetPassword')->with(['member' => $member]);
         }
 
         // 認証に失敗した場合

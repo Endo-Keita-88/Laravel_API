@@ -11,7 +11,7 @@
         <h1>メール認証</h1>
         <h2>{{ $member->email }}に送信されたコードを入力してください</h2>
 
-        <form method="POST" action="{{ route('tokenCheck') }}">
+        <form method="GET" action="{{ route('tokenCheck') }}">
             @csrf
             <div class="reg_value">
                 <input type="text" id="token" name="token" required placeholder="コードを入力してください">
@@ -25,7 +25,7 @@
         </form>
     </div>
     <div class="back-link">
-        &laquo; <a href="{{ route('login') }}">戻る</a>
+        &laquo; <a href="{{ route('delete')}}">戻る</a>
     </div>
 </body>
 </html>
