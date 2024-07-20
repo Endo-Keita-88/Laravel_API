@@ -20,10 +20,6 @@
             <div class="reg_value">
                メールアドレス： {{ $member->email }}<br>
             </div>
-
-            <div class="reg_value">
-               パスワード： {{ $member->password }}<br>
-            </div>
             <div class="reg_value">
                 <button type="submit">確認</button>
             </div>

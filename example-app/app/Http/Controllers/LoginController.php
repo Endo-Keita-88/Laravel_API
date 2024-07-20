@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Member;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -28,7 +29,6 @@ class LoginController extends Controller
      */
     public function show(Request $request, Member $member)
     {
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -41,7 +41,7 @@ class LoginController extends Controller
         $member = Member::where('email', $email)->first();
 
         // メンバーが存在し、パスワードが一致するか確認
-        if ($member &&  $member->password === $password) {
+        if ($member &&  Hash::check($password, $member->password)) {
             return view('login_id')->with(['member' => $member]);
         }
 
@@ -51,7 +51,7 @@ class LoginController extends Controller
 
     /**
      * パスワード再設定画面(パスワードを忘れた場合)に認証処理をする
-     * @param
+     * @param Request $request
      * @return view
      */
     public function resetMailCheck(Request $request)
@@ -89,7 +89,7 @@ class LoginController extends Controller
 
         // 認証コードが一致するか確認
         if ($member->token === $token) {
-        return view('resetPassword')->with(['member' => $member]);
+            return view('resetPassword')->with(['member' => $member]);
         }
 
         // 認証に失敗した場合
@@ -112,7 +112,7 @@ class LoginController extends Controller
 
         // パスワードを変更を保存
         $member = Member::where('email', $email)->first();
-        $member->password = $request->password;
+        $member->password = Hash::make($request->password);
         $member->save();
 
         return view('registerCheck')->with(['member' => $member]);
@@ -144,7 +144,7 @@ class LoginController extends Controller
 
         // パスワードを変更を保存
         $member = Member::where('name', $name)->first();
-        $member->password = $request->password;
+        $member->password = Hash::make($request->password);
         $member->save();
 
         return view('registerCheck')->with(['member' => $member]);

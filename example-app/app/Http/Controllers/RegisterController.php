@@ -6,6 +6,8 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 
 class RegisterController extends Controller
@@ -22,28 +24,18 @@ class RegisterController extends Controller
         $request->validate([
             'email' => 'required|email|unique:members,email',
         ]);
+        $token = rand(1000, 9999);
 
         // 新しいユーザーを作成する
         $member = new Member();
         $member->email = $request->email;
         $member->name = '';
         $member->password = '';
-        $member->token = '';
+        $member->token = $token;
         // ユーザーの保存
         $saved = $member->save();
 
-        if ($saved) {
-            // 成功した場合
-            $token = rand(1000, 9999);
-            $member->token = $token;
-            $member->save();
-
-            return view('verify')->with(['member' => $member]);
-
-        } else {
-            // 失敗した場合
-            return back()->withErrors(['email' => 'アドレスが正しくないまたはすでに使用されています。'])->withInput();
-        }
+        return view('verify')->with(['member' => $member]);
     }
 
     /**
@@ -69,7 +61,9 @@ class RegisterController extends Controller
         }
 
         // 認証に失敗した場合
-        return back()->withErrors(['token' => '認証コードが正しくありません。'])->withInput();
+        // return back()->withErrors(['token' => '認証コードが正しくありません。'])->withInput();
+        return view('verify')->with(['member' => $member]);
+
     }
 
     /**
@@ -80,19 +74,38 @@ class RegisterController extends Controller
     public function registerCreate(Request $request)
     {
         // バリデーション
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'password' => 'required|string|confirmed',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'password' => 'required|string|confirmed',
+            ],
+            [
+                'password.confirmed' => 'パスワードと確認用パスワードが一致しません。',
+            ]
+        );
 
         // 新しいユーザーを作成
         $member = Member::latest()->first();
         $member->name = $request->name;
-        $member->password = $request->password;
+        $member->password = Hash::make($request->password);
         $member->save();
 
         // ユーザー登録後の処理
         return view('registerCheck')->with(['member' => $member]);
+    }
+
+    /**
+     * 会員登録処理を途中でやめた場合
+     * @param
+     * @return view
+     */
+    public function delete()
+    {
+        // 新しいユーザーを削除
+        $member = Member::latest()->first();
+        $member->delete();
+        //ひとつ前の画面に遷移する
+        return view('send');
     }
 }
 

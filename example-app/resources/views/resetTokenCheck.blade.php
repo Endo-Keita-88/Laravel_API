@@ -11,11 +11,10 @@
         <h1>メール認証</h1>
         @isset($member)
         <h2>{{ $member->email }}に送信されたコードを入力してください</h2>
-        <h2>{{ $member->token }}</h2>
         @else
 
         @endisset
-        <form method="POST" action="{{ route('resetTokenCheck') }}">
+        <form method="GET" action="{{ route('resetTokenCheck') }}">
             @csrf
             <div class="reg_value">
                 <input type="hidden" name="email" value="{{ $member->email }}">

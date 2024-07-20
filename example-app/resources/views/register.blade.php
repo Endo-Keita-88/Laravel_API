@@ -23,6 +23,9 @@
             <div class="reg_value">
                 <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="パスワードをもう一度入力してください">
             </div>
+            @error('password_confirmation')
+                {{ $message }}</div>
+            @enderror
             <div class="reg_value">
                 <button type="submit">登録</button>
             </div>

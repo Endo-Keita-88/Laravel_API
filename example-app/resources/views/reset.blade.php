@@ -10,7 +10,7 @@
     <div class="container">
         <h1>パスワード再設定</h1>
         <h2>メールアドレスを入力してください</h2>
-        <form method="POST" action="{{ route('resetMailCheck') }}">
+        <form method="GET" action="{{ route('resetMailCheck') }}">
             @csrf
             <div class="reg_value">
                 <input ttype="email" name="email" required placeholder="メールアドレスを入力してください">
